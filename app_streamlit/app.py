@@ -1,8 +1,22 @@
 import streamlit as st
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.vectorstores import FAISS
+from langchain_mistralai.embeddings import MistralAIEmbeddings
+from mistralai import Mistral
+import faiss
+from dotenv import load_dotenv
 import tempfile
 import os
 
+load_dotenv()
+
+#load api keys
+api_key = os.getenv("MISTRAL_API_KEY")
+
+llm = Mistral(api_key=api_key)
+
+embeddings = MistralAIEmbeddings(api_key=api_key,
+                                 model="mistral-embed")
 
 #app title
 st.title("Personal RAG APP")
@@ -22,9 +36,12 @@ if uploaded_file is not None:
 
 
     #read the pdf
-    path = str(temp_file_path)
     loader = PyPDFLoader(temp_file_path)
 
     document = loader.load()
-
-    st.write(document[0])
+    st.success("Document loaded successfully")
+    if st.sidebar.button("Create Vector Store"):
+        
+        #create vector store
+        st.success("Button working fine")
+    
